@@ -1,27 +1,52 @@
 # umi-request-practice
 
-## Getting Started
+> umi-request 实践
 
-Install dependencies,
+## 需求
 
-```bash
-$ npm i
-```
+- 做成一个 JS 插件
 
-Start the dev server,
+- 所有请求都走 POST 方法
 
-```bash
-$ npm start
-```
+- 统一添加 Token，用户信息，设备信息
 
-Build documentation,
+- 统一 HTTP 请求体结构，大致为：
 
-```bash
-$ npm run docs:build
-```
+  ```
+  {
+    // 系统报文头
+    sysHead: {
+      // 服务
+      service: "",
+      // 接口
+      interface: "",
+      // 接口版本
+      interfaceVersion: "",
+      // 系统标识
+      systemTag: ""
+    },
+    // 本地报文头
+    localHead: {
+      // 分页信息
+      pageInfo: "",
+      // 用户信息
+      userInfo: "",
+      // 设备信息
+      deviceInfo: ""
+    },
+    // 报文体
+    body: {
+      ...
+    }
+  }
+  ```
 
-Build library via `father-build`,
+- 支持 Mock
 
-```bash
-$ npm run build
-```
+- 支持无效请求取消（如：无 Token，无用户信息等）
+
+- 支持重复请求拦截
+
+- 过期请求自动跳出
+
+- 统一错误处理
