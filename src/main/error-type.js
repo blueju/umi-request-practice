@@ -17,8 +17,8 @@ export class HttpError extends Error {
  * Interface Error
  * 接口错误
  * @param {*} message Error 必备属性
- * @param {*} resCode 返回的网关状态码
- * @param {*} resInfo 返回的网关提示语
+ * @param {*} resCode 返回的接口响应状态码
+ * @param {*} resInfo 返回的接口响应提示语
  */
 export class InterfaceError extends Error {
   constructor(message, resCode, resInfo) {

@@ -1,7 +1,7 @@
 import { extend } from 'umi-request';
 import { HttpError, InterfaceError } from './error-type';
 import { errorHandler } from './error-handler';
-import { globalDefineCheck } from './define-check';
+import checkGlobalDefine from './check-global-define';
 import deviceInfo from './device-info';
 
 // 实例化
@@ -14,12 +14,16 @@ const request = extend({
  */
 request.interceptors.request.use(
   (url, options) => {
-    // 执行前检查
-    globalDefineCheck();
+    checkGlobalDefine();
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (!userInfo) {
       throw new Error('用户信息不存在');
     }
+    const token = JSON.parse(localStorage.getItem('token'));
+    if (!token) {
+      throw new Error('Token 不存在');
+    }
+
     // 清除 params（即：query参数）
     options.params = {};
     // 请求方法统一为 POST
