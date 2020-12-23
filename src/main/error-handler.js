@@ -52,6 +52,14 @@ export const errorHandler = error => {
     }
     return false;
   }
+  // 前置错误
+  if (error.name === 'PremiseError') {
+    notification.error({
+      message: '前置错误',
+      description: error.message,
+    });
+    return false;
+  }
   notification.error({
     message: '其他错误',
     description: error.message,

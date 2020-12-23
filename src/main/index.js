@@ -1,5 +1,5 @@
 import { extend } from 'umi-request';
-import { HttpError, InterfaceError } from './error-type';
+import { HttpError, InterfaceError, PremiseError } from './error-type';
 import { errorHandler } from './error-handler';
 import checkGlobalDefine from './check-global-define';
 import deviceInfo from './device-info';
@@ -17,11 +17,11 @@ request.interceptors.request.use(
     checkGlobalDefine();
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (!userInfo) {
-      throw new Error('用户信息不存在');
+      throw new PremiseError('用户信息不存在');
     }
     const token = JSON.parse(localStorage.getItem('token'));
     if (!token) {
-      throw new Error('Token 不存在');
+      throw new PremiseError('Token 不存在');
     }
 
     // 清除 params（即：query参数）
