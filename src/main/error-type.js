@@ -1,6 +1,7 @@
 /**
  * HTTP Error
- * @param {*} message Error 必备属性
+ * HTTP 错误
+ * @param {*} message     Error 必备属性
  * @param {*} statusCode  返回的 HTTP 状态码
  */
 export class HttpError extends Error {
@@ -13,10 +14,11 @@ export class HttpError extends Error {
 }
 
 /**
- * Gateway Error
+ * Interface Error
+ * 接口错误
  * @param {*} message Error 必备属性
- * @param {*} resCode   返回的网关状态码
- * @param {*} resInfo  返回的网关提示语
+ * @param {*} resCode 返回的网关状态码
+ * @param {*} resInfo 返回的网关提示语
  */
 export class InterfaceError extends Error {
   constructor(message, resCode, resInfo) {

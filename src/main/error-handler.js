@@ -13,9 +13,9 @@ const codeMessage = {
   410: '请求的资源被永久删除，且不会再得到的。',
   422: '当创建一个对象时，发生一个验证错误。',
   500: '服务器发生错误，请检查服务器。',
-  502: '网关错误。',
+  502: '接口错误。',
   503: '服务不可用，服务器暂时过载或维护。',
-  504: '网关超时。',
+  504: '接口超时。',
 };
 
 /**
@@ -39,11 +39,10 @@ export const errorHandler = error => {
     });
     return false;
   }
-  // 网关错误
-  // 后续可扩展至根据网关状态码提示不同的中文提示语
+  // 接口错误
   if (error.name === 'InterfaceError') {
     notification.error({
-      message: '网关错误',
+      message: '接口错误',
       description: `${error.resCode}，${error.resInfo}`,
     });
     // -1 代表 token 已过期，需主动跳到登录页面

@@ -18,9 +18,8 @@ request.interceptors.request.use(
     globalDefineCheck();
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (!userInfo) {
-      throw new Error('缺少用户信息');
+      throw new Error('用户信息不存在');
     }
-
     // 清除 params（即：query参数）
     options.params = {};
     // 请求方法统一为 POST
