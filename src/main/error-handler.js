@@ -29,7 +29,8 @@ export const errorHandler = error => {
       description: error.message,
       message: '网络异常',
     });
-    return false;
+    // 阻断执行，并将错误信息传递下去
+    return Promise.reject(error);
   }
   // HTTP 错误
   if (error.name === 'HttpError') {
@@ -37,7 +38,7 @@ export const errorHandler = error => {
       message: 'HTTP 错误',
       description: `${error.statusCode}，${codeMessage?.[error.statusCode]}`,
     });
-    return false;
+    return Promise.reject(error);
   }
   // 接口错误
   if (error.name === 'InterfaceError') {
@@ -48,9 +49,9 @@ export const errorHandler = error => {
     // -1 代表 token 已过期，需主动跳到登录页面
     if (error.resCode === '-1') {
       window.location.href = '/';
-      return false;
+      return Promise.reject(error);
     }
-    return false;
+    return Promise.reject(error);
   }
   // 前置错误
   if (error.name === 'PremiseError') {
@@ -58,11 +59,11 @@ export const errorHandler = error => {
       message: '前置错误',
       description: error.message,
     });
-    return false;
+    return Promise.reject(error);
   }
   notification.error({
     message: '其他错误',
     description: error.message,
   });
-  return false;
+  return Promise.reject(error);
 };
