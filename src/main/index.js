@@ -19,7 +19,7 @@ request.interceptors.request.use(
     if (!userInfo) {
       throw new PremiseError('用户信息不存在');
     }
-    const token = JSON.parse(localStorage.getItem('token'));
+    const token = localStorage.getItem('token');
     if (!token) {
       throw new PremiseError('Token 不存在');
     }
