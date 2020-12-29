@@ -2,8 +2,8 @@ import { defineConfig } from 'dumi';
 
 export default defineConfig({
   title: 'umi-request-practice',
-  favicon: './public/favicon.png',
-  logo: './public/logo.png',
+  favicon: './favicon.png',
+  logo: './logo.png',
   outputPath: 'docs-dist',
   // more config: https://d.umijs.org/config
   define: {
