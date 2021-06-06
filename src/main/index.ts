@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import { extend } from 'umi-request';
 
 import { HttpError, InterfaceError, PremiseError } from './error-type';
@@ -11,6 +12,7 @@ import generateDeviceInfo, { IDeviceInfo } from './generate-device-info';
  * https://github.com/umijs/umi-request/blob/master/README_zh-CN.md#创建实例
  */
 const blueRequest = extend({
+  suffix: 'agrs',
   errorHandler,
 });
 
@@ -61,37 +63,54 @@ blueRequest.interceptors.request.use(
   (url, options) => {
     checkUmiDefine();
     let userInfo;
-    try {
-      userInfo = JSON.parse(<string>localStorage.getItem('userInfo'));
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw Error;
+    let token;
+    if (process.env.NODE_ENV === 'development') {
+      url = BLUE_REQUEST.mock ? `${url}` : `${BLUE_REQUEST.baseUrl}`;
+      try {
+        userInfo = JSON.parse(<string>localStorage.getItem('userInfo'));
+        token = localStorage.getItem('token');
+        if (!token) throw Error;
+      } catch (e) {
+        message.warn('登录过期或未登录，将为你提供一份临时 token 与 userInfo');
+        userInfo = {
+          userNo: 'userNo',
+          userName: 'userName',
+          roleNo: 'roleNo',
+          roleName: 'roleName',
+        };
+        token = 'token';
       }
-    } catch (e) {
-      throw new PremiseError('过期或未登录');
+    }
+    if (process.env.NODE_ENV === 'production') {
+      url = `${BLUE_REQUEST.baseUrl}`;
+      try {
+        userInfo = JSON.parse(<string>localStorage.getItem('userInfo'));
+        const token = localStorage.getItem('token');
+        if (!token) throw Error;
+      } catch (e) {
+        throw new PremiseError('登录过期或未登录');
+      }
     }
 
-    // 清除 params（即：query参数）
-    options.params = {};
     // 请求方法统一为 POST
     options.method = 'POST';
-    const data: IHttpBody = {
+    const httpBody: IHttpBody = {
       sysHead: {
-        system: options?.data?.sysHead?.system,
-        service: options?.data?.sysHead?.service,
-        interface: options?.data?.sysHead?.interface,
-        interfaceVersion: options?.data?.sysHead?.interfaceVersion,
+        system: options?.data?.sysHead?.system || '',
+        service: options?.data?.sysHead?.service || '',
+        interface: options?.data?.sysHead?.interface || '',
+        interfaceVersion: options?.data?.sysHead?.interfaceVersion || '',
       },
       localHead: {
         pageInfo: {
-          current: options?.data?.localHead?.pageInfo?.current,
-          pageSize: options?.data?.localHead?.pageInfo?.pageSize,
+          current: options?.data?.localHead?.pageInfo?.current || 1,
+          pageSize: options?.data?.localHead?.pageInfo?.pageSize || 10,
         },
         userInfo: {
-          userNo: userInfo?.userNo,
-          userName: userInfo?.userName,
-          roleNo: userInfo?.roleNo,
-          roleName: userInfo?.roleName,
+          userNo: userInfo?.userNo || '',
+          userName: userInfo?.userName || '',
+          roleNo: userInfo?.roleNo || '',
+          roleName: userInfo?.roleName || '',
         },
         deviceInfo: generateDeviceInfo(),
       },
@@ -99,27 +118,13 @@ blueRequest.interceptors.request.use(
         ...options?.data?.body,
       },
     };
-    if (process.env.NODE_ENV === 'development') {
-      // 开发环境
-      return {
-        url: process.env.BLUE_REQUEST.mock
-          ? url
-          : `${process.env.BLUE_REQUEST.baseUrl}/agrs`,
-        options: {
-          ...options,
-          data,
-        },
-      };
-    } else {
-      // 生产环境
-      return {
-        url: `${process.env.BLUE_REQUEST.baseUrl}/agrs`,
-        options: {
-          ...options,
-          data,
-        },
-      };
-    }
+    return {
+      url,
+      options: {
+        ...options,
+        data: httpBody,
+      },
+    };
   },
   {
     global: false,
