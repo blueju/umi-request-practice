@@ -1,3 +1,3 @@
-import request from './main';
+import blueRequest from './main';
 
-export default request;
+export default blueRequest;

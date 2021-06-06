@@ -1,71 +1,100 @@
 import { extend } from 'umi-request';
+
 import { HttpError, InterfaceError, PremiseError } from './error-type';
 import { errorHandler } from './error-handler';
-import checkGlobalDefine from './check-global-define';
-import deviceInfo from './device-info';
+import checkUmiDefine from './check-global-define';
+import generateDeviceInfo, { IDeviceInfo } from './generate-device-info';
 
-// 实例化
-const request = extend({
+/**
+ * umi-request 实例 <br>
+ * 参考：<br>
+ * https://github.com/umijs/umi-request/blob/master/README_zh-CN.md#创建实例
+ */
+const blueRequest = extend({
   errorHandler,
 });
+
+/** http 请求体 */
+interface IHttpBody {
+  /** 系统报文头 */
+  sysHead: {
+    /** 系统 */
+    system: string;
+    /** 服务 */
+    service: string;
+    /** 接口 */
+    interface: string;
+    /** 接口版本 */
+    interfaceVersion: string;
+  };
+  /** 本地报文头 */
+  localHead: {
+    /** 分页信息 */
+    pageInfo: {
+      /** 当前页数 */
+      current: number;
+      /** 每页条数 */
+      pageSize: number;
+    };
+    /** 用户信息 */
+    userInfo: {
+      /** 用户编号 */
+      userNo: string;
+      /** 用户名称 */
+      userName: string;
+      /** 角色编号 */
+      roleNo: string;
+      /** 角色名称 */
+      roleName: string;
+    };
+    /** 设备指纹信息 */
+    deviceInfo: IDeviceInfo;
+  };
+  /** 报文体 */
+  body: {};
+}
 
 /**
  * 请求拦截
  */
-request.interceptors.request.use(
+blueRequest.interceptors.request.use(
   (url, options) => {
-    checkGlobalDefine();
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    if (!userInfo) {
-      throw new PremiseError('用户信息不存在');
-    }
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new PremiseError('Token 不存在');
+    checkUmiDefine();
+    let userInfo;
+    try {
+      userInfo = JSON.parse(<string>localStorage.getItem('userInfo'));
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw Error;
+      }
+    } catch (e) {
+      throw new PremiseError('过期或未登录');
     }
 
     // 清除 params（即：query参数）
     options.params = {};
     // 请求方法统一为 POST
     options.method = 'POST';
-    // 系统报文头
-    const sysHead = {
-      // 系统
-      system: options?.data?.sysHead?.system,
-      // 服务
-      service: options?.data?.sysHead?.service,
-      // 接口
-      interface: options?.data?.sysHead?.interface,
-      // 版本
-      interfaceVersion: options?.data?.sysHead?.interfaceVersion,
-    };
-    // 本地报文头
-    const localHead = {
-      // 分页信息
-      pageInfo: {
-        // 当前页数
-        current: options?.data?.localHead?.pageInfo?.current,
-        // 每页条数
-        pageSize: options?.data?.localHead?.pageInfo?.pageSize,
+    const data: IHttpBody = {
+      sysHead: {
+        system: options?.data?.sysHead?.system,
+        service: options?.data?.sysHead?.service,
+        interface: options?.data?.sysHead?.interface,
+        interfaceVersion: options?.data?.sysHead?.interfaceVersion,
       },
-      // 用户信息
-      userInfo: {
-        // 用户编号
-        userNo: userInfo?.userNo,
-        // 用户名
-        userName: userInfo?.userName,
-        // 角色编号
-        roleNo: userInfo?.roleNo,
-        // 角色名
-        roleName: userInfo?.roleName,
+      localHead: {
+        pageInfo: {
+          current: options?.data?.localHead?.pageInfo?.current,
+          pageSize: options?.data?.localHead?.pageInfo?.pageSize,
+        },
+        userInfo: {
+          userNo: userInfo?.userNo,
+          userName: userInfo?.userName,
+          roleNo: userInfo?.roleNo,
+          roleName: userInfo?.roleName,
+        },
+        deviceInfo: generateDeviceInfo(),
       },
-      // 设备信息
-      deviceInfo,
-    };
-    // HTTP 请求体组装
-    const data = {
-      sysHead,
-      localHead,
       body: {
         ...options?.data?.body,
       },
@@ -100,8 +129,8 @@ request.interceptors.request.use(
 /**
  * 响应拦截
  */
-request.interceptors.response.use(
-  (response, options) => {
+blueRequest.interceptors.response.use(
+  response => {
     if (response.status === 200) {
       return response
         .clone()
@@ -124,4 +153,4 @@ request.interceptors.response.use(
   },
 );
 
-export default request;
+export default blueRequest;

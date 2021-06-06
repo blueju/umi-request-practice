@@ -22,7 +22,7 @@ const codeMessage = {
  * 统一异常处理
  * @param {*} error 错误信息（包括但不限于 name，message）
  */
-export const errorHandler = error => {
+export const errorHandler = (error: Error) => {
   // 网络异常
   if (error.message === 'Failed to fetch') {
     notification.error({
