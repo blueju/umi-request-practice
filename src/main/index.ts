@@ -70,8 +70,8 @@ request.interceptors.request.use(
         ...options?.data?.body,
       },
     };
-    // 开发环境
     if (process.env.NODE_ENV === 'development') {
+      // 开发环境
       return {
         url: GLOBAL_DEFINE_UMI_REQUEST_PRACTICE.mock
           ? url
@@ -81,9 +81,8 @@ request.interceptors.request.use(
           data,
         },
       };
-    }
-    // 生产环境
-    if (process.env.NODE_ENV === 'production') {
+    } else {
+      // 生产环境
       return {
         url: `${GLOBAL_DEFINE_UMI_REQUEST_PRACTICE.baseUrl}/agrs`,
         options: {
