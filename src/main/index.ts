@@ -102,9 +102,9 @@ blueRequest.interceptors.request.use(
     if (process.env.NODE_ENV === 'development') {
       // 开发环境
       return {
-        url: GLOBAL_DEFINE_UMI_REQUEST_PRACTICE.mock
+        url: process.env.BLUE_REQUEST.mock
           ? url
-          : `${GLOBAL_DEFINE_UMI_REQUEST_PRACTICE.baseUrl}/agrs`,
+          : `${process.env.BLUE_REQUEST.baseUrl}/agrs`,
         options: {
           ...options,
           data,
@@ -113,7 +113,7 @@ blueRequest.interceptors.request.use(
     } else {
       // 生产环境
       return {
-        url: `${GLOBAL_DEFINE_UMI_REQUEST_PRACTICE.baseUrl}/agrs`,
+        url: `${process.env.BLUE_REQUEST.baseUrl}/agrs`,
         options: {
           ...options,
           data,

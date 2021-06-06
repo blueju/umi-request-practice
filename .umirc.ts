@@ -1,20 +1,26 @@
-import { defineConfig } from 'dumi';
+interface IBlueRequest {
+  /** 开发环境是否开启 mock */
+  mock: boolean;
+  /** 请求基础 url */
+  baseUrl: string;
+}
 
-export default defineConfig({
+export default {
   title: 'umi-request-practice',
   favicon: './favicon.png',
   logo: './logo.png',
   outputPath: 'docs-dist',
   // more config: https://d.umijs.org/config
   define: {
-    // 全局常量配置
-    // https://umijs.org/zh-CN/config#define
-    // https://webpack.docschina.org/plugins/define-plugin
-    GLOBAL_DEFINE_UMI_REQUEST_PRACTICE: {
-      // 是否开启 Mock，生产环境无效
+    /**
+     * blue-reuqest 所需的一些全局常量定义。<br>
+     * 参考：<br>
+     * 1、https://umijs.org/zh-CN/config#define<br>
+     * 2、https://webpack.docschina.org/plugins/define-plugin
+     */
+    BLUE_REQUEST: {
       mock: false,
-      // 接口基础地址
       baseUrl: '',
-    },
+    } as IBlueRequest,
   },
-});
+};
