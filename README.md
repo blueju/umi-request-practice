@@ -15,31 +15,44 @@
 - [ ] 基于后管网关的特殊性，http 请求体结构需统一，大致为：
 
 ```
-{
-  // 系统报文头
+/** http 请求体 */
+interface IHttpBody {
+  /** 系统报文头 */
   sysHead: {
-    // 服务
-    service: "",
-    // 接口
-    interface: "",
-    // 接口版本
-    interfaceVersion: "",
-    // 系统标识
-    systemTag: ""
-  },
-  // 本地报文头
+    /** 系统 */
+    system: string;
+    /** 服务 */
+    service: string;
+    /** 接口 */
+    interface: string;
+    /** 接口版本 */
+    interfaceVersion: string;
+  };
+  /** 本地报文头 */
   localHead: {
-    // 分页信息
-    pageInfo: "",
-    // 用户信息
-    userInfo: "",
-    // 设备信息
-    deviceInfo: ""
-  },
-  // 报文体
-  body: {
-    ...
-  }
+    /** 分页信息 */
+    pageInfo: {
+      /** 当前页数 */
+      current: number;
+      /** 每页条数 */
+      pageSize: number;
+    };
+    /** 用户信息 */
+    userInfo: {
+      /** 用户编号 */
+      userNo: string;
+      /** 用户名称 */
+      userName: string;
+      /** 角色编号 */
+      roleNo: string;
+      /** 角色名称 */
+      roleName: string;
+    };
+    /** 设备指纹信息 */
+    deviceInfo: IDeviceInfo;
+  };
+  /** 报文体 */
+  body: {};
 }
 ```
 
