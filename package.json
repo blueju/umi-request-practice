@@ -35,17 +35,12 @@
     "react": "^16.12.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.26.0",
-    "@typescript-eslint/parser": "^4.26.0",
     "@umijs/test": "^3.0.5",
     "dumi": "^1.0.10",
-    "eslint": "^7.28.0",
-    "eslint-config-alloy": "^4.1.0",
     "father-build": "^1.17.2",
     "gh-pages": "^3.0.0",
     "lint-staged": "^10.0.7",
     "prettier": "^1.19.1",
-    "typescript": "^4.3.2",
     "yorkie": "^2.0.0"
   }
 }
