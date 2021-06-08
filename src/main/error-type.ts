@@ -15,10 +15,10 @@ export class HttpError extends Error {
  * @param {*} resCode 返回的接口响应状态码
  * @param {*} resInfo 返回的接口响应提示语
  */
-export class InterfaceError extends Error {
+export class SystemError extends Error {
   constructor(message: string, resCode: string, resInfo: string) {
     super(message);
-    this.name = 'InterfaceError';
+    this.name = 'SystemError';
     this.message = message;
     this.resCode = resCode;
     this.resInfo = resInfo;

@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import { extend } from 'umi-request';
 
-import { HttpError, InterfaceError, PremiseError } from './error-type';
+import { HttpError, SystemError, PremiseError } from './error-type';
 import { errorHandler } from './error-handler';
 import checkUmiDefine from './check-global-define';
 import generateDeviceInfo, { IDeviceInfo } from './generate-device-info';
@@ -146,7 +146,7 @@ blueRequest.interceptors.response.use(
           } else {
             const resCode = responseJson?.sysHead?.resCode;
             const resInfo = responseJson?.sysHead?.resInfo;
-            throw new InterfaceError('', resCode, resInfo);
+            throw new SystemError('', resCode, resInfo);
           }
         });
     } else {

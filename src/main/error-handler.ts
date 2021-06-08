@@ -41,7 +41,7 @@ export const errorHandler = (error: Error) => {
     return Promise.reject(error);
   }
   // 接口错误
-  if (error.name === 'InterfaceError') {
+  if (error.name === 'SystemError') {
     notification.error({
       message: '接口错误',
       description: `${error.resCode}，${error.resInfo}`,
