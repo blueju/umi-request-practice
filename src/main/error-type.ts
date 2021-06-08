@@ -1,27 +1,14 @@
 export class HttpError extends Error {
-  status: number;
   constructor(message: string, status: number) {
     super(message);
-    this.name = 'HttpError';
-    this.message = message;
-    this.status = status;
+    this.name = this.constructor.name;
   }
 }
 
-/**
- * Interface Error
- * 接口错误
- * @param {*} message Error 必备属性
- * @param {*} resCode 返回的接口响应状态码
- * @param {*} resInfo 返回的接口响应提示语
- */
 export class SystemError extends Error {
-  constructor(message: string, resCode: string, resInfo: string) {
+  constructor(message: string) {
     super(message);
-    this.name = 'SystemError';
-    this.message = message;
-    this.resCode = resCode;
-    this.resInfo = resInfo;
+    this.name = this.constructor.name;
   }
 }
 
@@ -33,9 +20,8 @@ export class SystemError extends Error {
  * @param {*} resInfo 返回的接口响应提示语
  */
 export class PremiseError extends Error {
-  constructor(message) {
+  constructor(message: string) {
     super(message);
-    this.name = 'PremiseError';
-    this.message = message;
+    this.name = this.constructor.name;
   }
 }
