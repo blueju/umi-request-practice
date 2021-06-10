@@ -1,3 +1,6 @@
+/**
+ * HTTP 错误，除网络错误、http 状态码为 200 以外的错误
+ */
 export class HttpError extends Error {
   constructor(message: string, status: number) {
     super(message);
@@ -5,6 +8,9 @@ export class HttpError extends Error {
   }
 }
 
+/**
+ * 系统错误，http 状态码为 200，但响应数据中 sysHead.retCd 为字符串 999999 的错误
+ */
 export class SystemError extends Error {
   constructor(message: string) {
     super(message);
@@ -16,8 +22,6 @@ export class SystemError extends Error {
  * Premise Error
  * 前提错误
  * 如：全局常量不存在，用户信息不存在，Token 不存在等
- * @param {*} message Error 必备属性
- * @param {*} resInfo 返回的接口响应提示语
  */
 export class PremiseError extends Error {
   constructor(message: string) {

@@ -20,39 +20,36 @@ const codeMessage = {
 
 /**
  * 统一异常处理
- * @param {*} error 错误信息（包括但不限于 name，message）
  */
 export const errorHandler = (error: Error) => {
   // 网络异常
   if (error.message === 'Failed to fetch') {
     notification.error({
-      description: error.message,
       message: '网络异常',
+      description: error.message,
     });
     // 阻断执行，并将错误信息传递下去
     return Promise.reject(error);
   }
+
   // HTTP 错误
   if (error.name === 'HttpError') {
     notification.error({
       message: 'HTTP 错误',
-      description: `${error.statusCode}，${codeMessage?.[error.statusCode]}`,
+      description: error.message,
     });
     return Promise.reject(error);
   }
-  // 接口错误
+
+  // 系统错误
   if (error.name === 'SystemError') {
     notification.error({
-      message: '接口错误',
-      description: `${error.resCode}，${error.resInfo}`,
+      message: '系统错误',
+      description: error.message,
     });
-    // -1 代表 token 已过期，需主动跳到登录页面
-    if (error.resCode === '-1') {
-      window.location.href = '/';
-      return Promise.reject(error);
-    }
     return Promise.reject(error);
   }
+
   // 前置错误
   if (error.name === 'PremiseError') {
     notification.error({
@@ -61,6 +58,7 @@ export const errorHandler = (error: Error) => {
     });
     return Promise.reject(error);
   }
+
   notification.error({
     message: '其他错误',
     description: error.message,
