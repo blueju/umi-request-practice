@@ -1,3 +1,3 @@
-import blueRequest from './main';
+import blueRequest from './lib';
 
 export default blueRequest;
