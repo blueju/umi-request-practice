@@ -12,9 +12,13 @@ export class HttpError extends Error {
  * 系统错误，http 状态码为 200，但响应数据中 sysHead.retCd 为字符串 999999 的错误
  */
 export class SystemError extends Error {
-  constructor(message: string) {
+  resCode: string;
+  resInfo: string;
+  constructor(message: string, resCode: string, resInfo: string) {
     super(message);
     this.name = this.constructor.name;
+    this.resCode = resCode;
+    this.resInfo = resInfo;
   }
 }
 

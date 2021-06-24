@@ -12,7 +12,9 @@ import generateDeviceInfo, { IDeviceInfo } from './generate-device-info';
  * https://github.com/umijs/umi-request/blob/master/README_zh-CN.md#创建实例
  */
 const blueRequest = extend({
+  /** url 后缀 */
   suffix: 'agrs',
+  /** 统一异常处理 */
   errorHandler,
 });
 
@@ -62,6 +64,7 @@ interface IHttpBody {
 blueRequest.interceptors.request.use(
   (url, options) => {
     checkUmiDefine();
+
     let userInfo;
     let token;
     if (process.env.NODE_ENV === 'development') {
@@ -94,6 +97,7 @@ blueRequest.interceptors.request.use(
 
     // 请求方法统一为 POST
     options.method = 'POST';
+
     const httpBody: IHttpBody = {
       sysHead: {
         system: options?.data?.sysHead?.system || '',
@@ -146,7 +150,7 @@ blueRequest.interceptors.response.use(
           } else {
             const resCode = responseJson?.sysHead?.resCode;
             const resInfo = responseJson?.sysHead?.resInfo;
-            throw new SystemError('', resCode, resInfo);
+            throw new SystemError();
           }
         });
     } else {
